@@ -1,12 +1,13 @@
 package suho.pofol.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import suho.pofol.domain.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 
 public class CustomUserDetails implements UserDetails {
 

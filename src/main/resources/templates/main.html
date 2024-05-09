@@ -184,23 +184,25 @@
     <div class="b-example-divider b-example-vr"></div>
 
     <!-- 높이 조절 해야됨....... 색깔 있는 테두리 (연한 하늘색)-->
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
+    <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;"> <!--280-->
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-            <span class="fs-4">Everywhere</span>
+            <svg class="bi pe-none " width="40" height="32"><img class="fs-4" src="../assets/brand/bootstrap-logo.svg" th:src="@{/images/heart.svg}" alt="" width="32" height="32"></svg> <!-- <use xlink:href="#bootstrap"/> -->
+            <span class="fs-4 ps-2">Everywhere</span>
         </a>
         <hr> <!-- 수평 가로선 -->
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
                 <a href="#" class="nav-link link-body-emphasis">
                     <!-- class="nav-link active"aria-current="page"   > 파란색 선택 표기 법 (추후 커서 갖다 댔을때 파란색 채워지도록 적용할건지 고민)-->
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg> <!-- #home 이미지 -->
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                        <img src="/images/leftmenu/home.svg" th:src="@{/images/leftmenu/home.svg}" alt="" width="16" height="16">
+                    </svg> <!-- #home 이미지 -->
                     홈
                 </a>
             </li>
             <li>
                 <a href="#" class="nav-link link-body-emphasis">
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#apple"/></svg>
                     검색
                 </a>
             </li>
@@ -228,17 +230,17 @@
             <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
                 <!--   https://github.com/mdo.png > 프로필 사진 등록 한 것으로 값 받도록    -->
-                <strong>ksh</strong>
-                <!--<strong><input type="text" th:value="${id}"/></strong>-->
+                <!--<strong>ksh</strong>-->
+                <strong><span th:text="${id}"></span></strong>
                 <!--<span th:text="${id}"></span>-->
                 <!--<input type="text" th:value="${role}"/>-->
             </a>
             <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">뭐할까</a></li>
+                <li><a class="dropdown-item" href="#">설정</a></li>
+                <li><a class="dropdown-item" href="#">프로필</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                <li><a class="dropdown-item" href="/logout" th:href="@{/logout}">로그아웃</a></li>
             </ul>
         </div>
     </div>
