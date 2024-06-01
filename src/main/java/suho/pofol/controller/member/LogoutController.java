@@ -1,4 +1,4 @@
-package suho.pofol.controller;
+package suho.pofol.controller.member;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,17 +1,18 @@
-package suho.pofol.dto;
+package suho.pofol.dto.security;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import suho.pofol.domain.User;
+import suho.pofol.domain.member.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
 
+
     private User user;
+
     public CustomUserDetails(User user){
         this.user = user;
     }

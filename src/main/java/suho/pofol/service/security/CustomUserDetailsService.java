@@ -1,13 +1,13 @@
-package suho.pofol.service;
+package suho.pofol.service.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import suho.pofol.domain.User;
-import suho.pofol.dto.CustomUserDetails;
-import suho.pofol.repository.UserRepository;
+import suho.pofol.domain.member.User;
+import suho.pofol.dto.security.CustomUserDetails;
+import suho.pofol.repository.member.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

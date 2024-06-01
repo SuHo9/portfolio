@@ -1,12 +1,12 @@
-package suho.pofol.service;
+package suho.pofol.service.member;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import suho.pofol.domain.User;
-import suho.pofol.dto.JoinDTO;
-import suho.pofol.repository.UserRepository;
+import suho.pofol.domain.member.User;
+import suho.pofol.dto.member.JoinDTO;
+import suho.pofol.repository.member.UserRepository;
 
 @Service
 @Slf4j
@@ -22,9 +22,7 @@ public class JoinService {
 
 
 
-    public void joinProcess(JoinDTO joinDTO){
-
-        log.info("왔나?1");
+    public void joinProcess(JoinDTO joinDTO) {
 
         //db에 이미 동일한 username을 가진 회원이 존재하는지? 검증 로직 필요.
         boolean isUser = userRepository.existsByUsername(joinDTO.getUsername());
@@ -37,16 +35,13 @@ public class JoinService {
 
         data.setUsername(joinDTO.getUsername());
         data.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword())); //암호화
+        data.setNickname(joinDTO.getNickname());
         data.setEmail(joinDTO.getEmail());
-        data.setRole("ROLE_ADMIN");
-
-        log.info("왔나?2");
+        data.setRole("ROLE_USER");
 
         //log.info("data.setEmail(joinDTO.getEmail())", data.setEmail(joinDTO.getEmail()));
 
         userRepository.save(data);
-
-        log.info("왔나?3");
 
     }
 }

@@ -1,4 +1,4 @@
-package suho.pofol.dto;
+package suho.pofol.dto.oauth2;
 
 public interface OAuth2Response {
 

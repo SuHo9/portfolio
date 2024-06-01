@@ -1,16 +1,16 @@
-package suho.pofol.service;
+package suho.pofol.service.oauth2;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import suho.pofol.domain.User;
-import suho.pofol.dto.CustomOAuth2User;
-import suho.pofol.dto.GoogleResponse;
-import suho.pofol.dto.NaverResponse;
-import suho.pofol.dto.OAuth2Response;
-import suho.pofol.repository.UserRepository;
+import suho.pofol.domain.member.User;
+import suho.pofol.dto.oauth2.CustomOAuth2User;
+import suho.pofol.dto.oauth2.GoogleResponse;
+import suho.pofol.dto.oauth2.NaverResponse;
+import suho.pofol.dto.oauth2.OAuth2Response;
+import suho.pofol.repository.member.UserRepository;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {

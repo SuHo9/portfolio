@@ -1,24 +1,26 @@
 package suho.pofol.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import suho.pofol.oauth2.CustomClientRegistrationRepo;
 import suho.pofol.oauth2.CustomOAuth2AuthorizedClientService;
-import suho.pofol.service.CustomOAuth2UserService;
+import suho.pofol.security.CustomAuthFailureHandler;
+import suho.pofol.service.oauth2.CustomOAuth2UserService;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -57,8 +59,16 @@ public class SecurityConfig {
     }
 
     @Bean
+    AuthenticationFailureHandler customAuthFailureHandler(){
+
+//        log.info("AuthenticationFailureHandler!!!");
+        return new CustomAuthFailureHandler();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
+//        log.info("SecurityFilterChain!!!");
 
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
@@ -79,12 +89,13 @@ public class SecurityConfig {
                         //CsrfTokenRequestAttributeHandler 인터페이스를 구현하면 추가 작업을 수행하거나 어플리케이션에서 토큰을 사용할 수 있는 방법을 커스텀할 수 있습니다.
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         //앵귤러나 리엑트와 함께 사용하면 withHttpOnlyFalse() 옵션을 사용해야 합니다. 쿠키의 http only 설정에 대해 검색해보시길 바랍니다.
-                        .ignoringRequestMatchers( "/login/**", "/logout/**", "/register/validate/email")
+                        .ignoringRequestMatchers( "/login/**", "/logout/**", "/register/validate/email","/board/post")  /* , "/api/post"    "/"   */
                 )
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers( "/login", "/join", "/joinProc", "/oauth2/**", "/loginProc", "/logout/**").permitAll() /*  ,"/" */
+                        .requestMatchers( "/member/join", "/member/joinProc", "/login", "/oauth2/**", "/loginProc", "/logout/**").permitAll() /*  ,"/" */
                         .requestMatchers( "/resources/**", "/static/**", "/assets/**", "/error", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers( "/bootstrap-icons.svg").permitAll()
+//                        .requestMatchers( "/board").permitAll()
                         /*.requestMatchers("/admin").hasRole("ADMIN")   //admin 페이지 인경우 로그인 필요.
                         .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")*/
                         /*.requestMatchers("/").hasAnyRole("A")
@@ -100,6 +111,7 @@ public class SecurityConfig {
         http
                 .formLogin((auth) -> auth.loginPage("/login")  //로그인 페이지 경로 설정
                         .loginProcessingUrl("/loginProc")      //form action 경로 설정 > 시큐리티 내부 작동
+                        .failureHandler(customAuthFailureHandler())
                         .permitAll()
                 );
 
@@ -116,8 +128,11 @@ public class SecurityConfig {
                         .sessionFixation().changeSessionId()); //세션 보호
         http
                 .logout((auth) -> auth.logoutUrl("/logout")
-                        .logoutSuccessUrl("/login"));
+                        .logoutSuccessUrl("/login"))
+                ;
 
         return http.build();
     }
+
+
 }
