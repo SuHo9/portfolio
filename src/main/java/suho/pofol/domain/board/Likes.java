@@ -1,13 +1,14 @@
 package suho.pofol.domain.board;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import suho.pofol.domain.member.User;
 
 @Entity
-@Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Likes {
 
 
@@ -24,12 +25,7 @@ public class Likes {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Likes(){
-
-    }
-
-    public Likes(Long likeId, Post post, User user) {
-        this.likeId = likeId;
+    public Likes(Post post, User user) {
         this.post = post;
         this.user = user;
     }

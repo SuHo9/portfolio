@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="suho.pofol.mappers.notice.NoticeMapper">
+    <select id="findNoticesWithFollowerName" resultType="suho.pofol.dto.notice.NoticeDTO" parameterType="int">     <!--suho.pofol.domain.notice.Notice-->
+<!--        SELECT a.noticeId, a.user_id as userId, b.followerName, a.message, b.follower_id as followerId, b.accepted-->
+<!--          FROM notice a LEFT JOIN (-->
+<!--                                    SELECT f.follower_id, f.following_id, u.username AS followerName, f.accepted-->
+<!--                                    FROM follow f-->
+<!--                                    LEFT JOIN user u ON u.user_id = f.follower_id-->
+<!--                                    ) b-->
+<!--                               ON b.following_id = a.user_id-->
+<!--         WHERE 1=1-->
+<!--           AND a.user_id = #{userId}-->
+
+        select a.noticeId, a.user_id as userId , b.followerName , a.message, b.follower_id as followerId, b.accepted, c.anotherAcc, b.nickname
+          from notice a left join ( select f.follower_id, f.following_id, u.username as followerName, f.accepted, u.nickname
+                                      from follow f left join user u
+                                                           on u.user_id = f.follower_id) b
+                               on b.following_id = a.user_id
+                        left join (select a.noticeId, a.user_id as userId , b.followerName, a.message, b.follower_id as followerId, b.accepted as anotherAcc
+                                     from notice a left join ( select f.follower_id, f.following_id, u.username as followerName, f.accepted, u.nickname
+                                                                 from follow f left join user u
+                                                                                      on u.user_id = f.following_id) b
+                                                          on b.follower_id = a.user_id ) c
+                               on c.noticeId = a.noticeId
+         where 1=1
+           and a.user_id = #{userId}
+    </select>
+</mapper>

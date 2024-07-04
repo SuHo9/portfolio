@@ -36,6 +36,9 @@ public class PostController {
     public String createPost(@Valid PostDTO postDTO, BindingResult result, Model model,
                              @AuthenticationPrincipal CustomUserDetails principal) {
         if (result.hasErrors()) {
+            result.getAllErrors().forEach(error -> {
+                log.info("Error: {}", error.getDefaultMessage());
+            });
             return "/board/post";
         }
 

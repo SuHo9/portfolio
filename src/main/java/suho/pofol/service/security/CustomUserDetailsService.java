@@ -9,6 +9,8 @@ import suho.pofol.domain.member.User;
 import suho.pofol.dto.security.CustomUserDetails;
 import suho.pofol.repository.member.UserRepository;
 
+import java.util.Map;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -18,13 +20,21 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User userData = userRepository.findByUsername(username);
-
-        if (userData != null) {
-
-            return new CustomUserDetails(userData);
+//        User userData = userRepository.findByUsername(username);
+//
+//        if (userData != null) {
+//
+//            return new CustomUserDetails(userData);
+//        }
+//
+//        return null;
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
         }
+        return new CustomUserDetails(user);
 
-        return null;
+//        return new CustomUserDetails(User user, Map<String, Object> attribute);
+//        return  new CustomUserDetails(user, oAuth2User.getAttributes());   //ksh - Oauth2User 추가 소스
     }
 }

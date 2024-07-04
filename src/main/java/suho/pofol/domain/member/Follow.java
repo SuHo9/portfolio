@@ -1,33 +1,40 @@
 package suho.pofol.domain.member;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Setter
 @Getter
+//@Builder
 public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
-    private Long followId;
+    private int followId;
 
     @ManyToOne
     @JoinColumn(name = "follower_id")
-    private User follower;
+    private User followerId;
 
     @ManyToOne
     @JoinColumn(name = "following_id")
-    private User following;
+    private User followingId;
+
+    @Column(name = "accepted")
+    private boolean accepted;
 
     public Follow(){
 
     }
 
-    public Follow(Long followId, User follower, User following) {
+    @Builder
+    public Follow(int followId, User followerId, User followingId, boolean accepted) {
         this.followId = followId;
-        this.follower = follower;
-        this.following = following;
+        this.followerId = followerId;
+        this.followingId = followingId;
+        this.accepted = accepted;
     }
 }

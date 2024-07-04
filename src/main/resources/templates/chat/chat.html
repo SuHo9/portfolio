@@ -4,29 +4,78 @@
       layout:decorate="~{/layout/default}">
 
 <th:block layout:fragment="content">
-    <div class="row main-head ">
-        <div class="col-12 main-title ">
-            # Movie List
-        </div>
-    </div>
-    <div class="row ">
-        <div class="table-responsive portlet">
-            <table class="table table-sm table-hover tb-success">
-                <tr class="center">
-                    <th>#</th>
-                    <th>title</th>
-                    <th>type</th>
-                    <th>createTime</th>
-                </tr>
-                <tr class="center">
-                    <th>#</th>
-                    <th>title</th>
-                    <th>type</th>
-                    <th>createTime</th>
-                </tr>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            </table>
+    <script>
+        $(document).ready(function() {
+        $('.chat-link').click(function(event) {
+            event.preventDefault();
+            var conversationId = $(this).data('conversation-id');
+            loadMessages(conversationId);
+            $('.chat-window').show(); // 채팅 창 보이기
+        });
+    });
+
+    function loadMessages(conversationId) {
+        $.ajax({
+            url: '/chat/messages/' + conversationId,
+            method: 'GET',
+            success: function(data) {
+                $('#messages').empty();
+                data.forEach(function(message) {
+                    $('#messages').append('<div>' + message.content + '</div>');
+                });
+            },
+            error: function(err) {
+                console.error('Error loading messages:', err);
+            }
+        });
+    }
+
+    function sendMessage() {
+        var messageInput = $('#messageInput').val();
+        var conversationId = $('.chat-link.active').data('conversation-id');
+
+        $.ajax({
+            url: '/chat/messages',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                conversationId: conversationId,
+                content: messageInput
+            }),
+            success: function(data) {
+                $('#messages').append('<div>' + data.content + '</div>');
+                $('#messageInput').val('');
+            },
+            error: function(err) {
+                console.error('Error sending message:', err);
+            }
+        });
+    }
+    </script>
+
+
+    <body>
+    <div>
+        <div class="friend-list">
+            <ul>
+                <li th:each="ChatListDTO : ${chatLists}">
+<!--                    <a th:href="@{/chat/{conversationId}(conversationId=${ChatListDTO.conversationId})}" th:text="${ChatListDTO.nickname}"></a>-->
+                    <a href="#" class="chat-link" data-conversation-id="[[${ChatListDTO.conversationId}]]" th:text="${ChatListDTO.nickname}"></a>
+<!--                    <a th:text="${ChatListDTO.nickname}"></a>-->
+<!--                    th:href="@{/chat/{conversationId}(conversationId=${conversation.conversationId})}"-->
+                </li>
+            </ul>
+        </div>
+        <div class="chat-window">
+            <div id="messages"></div>
+            <input type="text" id="messageInput" />
+            <button onclick="sendMessage()">Send</button>
         </div>
     </div>
+    </body>
 </th:block>
 </html>

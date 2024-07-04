@@ -4,7 +4,43 @@
       layout:decorate="~{/layout/default}">
 
 <th:block layout:fragment="content">
+    <style>
+        .image-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
 
+        .image-button img {
+            display: block;
+        }
+
+        .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+
+    </style>
+
+    <script th:inline="javascript">
+        function toggleCommentForm(postId) {
+            console.log('toggleCommentForm called with postId:', postId);
+            var form = document.getElementById('commentForm-' + [[${postId}]]);
+            console.log('form:', form);
+
+            if (form) {
+                if (form.style.display === 'none' || form.style.display === '') {
+                    form.style.display = 'block';
+                } else {
+                    form.style.display = 'none';
+                }
+            } else {
+                console.error('Form not found for postId:', postId);
+            }
+        }
+    </script>
 <!--    <script type="text/javascript">-->
 <!--        function previewImage(event) {-->
 <!--            var input = event.target;-->
@@ -27,27 +63,51 @@
         <h2>My...</h2>
         <div th:each="post : ${posts}">
             <div>
-                <img th:src="@{${post.imageUrl}}" id="imagePreview" alt="Post Image" style="display: none;">
+                <img th:src="@{${post.imageUrl}}" alt="Post Image">
                 <p th:text="${post.caption}"></p>
 
                 <div>
-                    <form th:action="@{/addLike}" method="post">
-                        <input type="hidden" th:value="${post.postId}" name="postId"/>
-                        <button type="submit">Like</button>
+                    <form th:action="@{/addLike}" method="post" th:object="${likeDTO}">
+                        <input type="hidden" class="form-control"  th:value="${post.postId}" name="postId" th:name="postId"/>
+                        <button type="submit" class="image-button">
+                            <!--                            <img src="images/to/your/image.png" alt="Like" style="width: 20px; height: 20px;">-->
+                            <span th:text="${#numbers.formatInteger(post.likes.size(), 0)}">0</span>
+                            <img src="../images/balloon-heart.svg" th:src="@{/images/board/balloon-heart.svg}" alt="" width="16" height="16">
+                            <!--                            class="fs-4"      -->
+                        </button>
+<!--                        <button type="button" class="image-button" th:onclick="toggleCommentForm([[${post.postId}]])">-->
+<!--                            <img src="../images/board/reply.svg" th:src="@{/images/board/reply.svg}" alt="" width="16" height="16">-->
+<!--                        </button>-->
                     </form>
-                    <span th:text="${#numbers.formatInteger(post.likes.size(), 0)}">0</span> Likes
+
                 </div>
 
                 <div>
-                    <form th:action="@{/addComment}" method="post">
-                        <input type="hidden" th:value="${post.postId}" name="postId"/>
-                        <textarea name="content" placeholder="Add a comment"></textarea>
-                        <button type="submit">Comment</button>
+<!--                    <form th:action="@{/addComment}" method="post">-->
+                    <form id="commentForm-[[${post.postId}]]"  th:action="@{/addComment}" method="post" th:object="${commentDTO}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <input type="hidden" th:value="${post.postId}"  id="postId" name="postId" th:name="postId"/>
+                        <textarea id="content" name="content" class="form-control" th:field="*{content}" placeholder="댓글을 입력해주세요." th:errorclass="field-error">
+                        </textarea>
+<!--                        <label for="content">아이디</label>-->
+                        <div class="field-error" th:errors="*{content}"></div>
+<!--                        <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Username" th:errorclass="field-error"/>-->
+<!--                        <label for="username">아이디</label>-->
+<!--                        <div class="field-error" th:errors="*{username}">-->
+                        <button type="submit" class="image-button">등록</button>
                     </form>
                     <div th:each="comment : ${post.comments}">
-                        <p><strong th:text="${comment.user.username}"></strong> <span th:text="${comment.content}"></span></p>
+                        <p>
+                            <strong th:text="${comment.user.nickname}"></strong>
+                            <span th:text="${comment.content}"></span>
+                            <form th:if="${comment.user.username == #authentication.principal.username}" th:action="@{/deleteComment}" method="post" style="display:inline">
+                                <input type="hidden" th:value="${comment.commentId}" name="commentId"/>
+                                <button type="submit" class="image-button"><img src="../images/board/trash.svg" th:src="@{/images/board/trash.svg}" alt="" width="16" height="16"></button>
+                            </form>
+                        </p>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

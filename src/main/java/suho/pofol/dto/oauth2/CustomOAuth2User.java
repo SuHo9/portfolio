@@ -6,7 +6,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-
+/**
+ * CustomUserDetails 클래스에 통합 함. 현재 사용하지 않음. XXXXX~!!!
+ */
 public class CustomOAuth2User implements OAuth2User {
 
     private final OAuth2Response oAuth2Response;

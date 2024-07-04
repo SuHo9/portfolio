@@ -86,12 +86,14 @@
 <body>
 <div class="body-container">
 
-    <aside th:replace="/layout/aside :: aside"></aside>
+    <aside th:replace="~{/layout/aside :: aside}"></aside>
+<!--    "/layout/aside :: aside"-->
 
     <div class="main-container">
         <div class="content-container">
             <th:block layout:fragment="content"></th:block>
-            <footer th:replace="/layout/footer :: footer"></footer>
+            <footer th:replace="~{/layout/footer :: footer}"></footer>
+<!--        "/layout/footer :: footer"    -->
         </div>
     </div>
 </div>

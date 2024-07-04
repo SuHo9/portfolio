@@ -1,15 +1,16 @@
 package suho.pofol.domain.board;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import suho.pofol.domain.member.User;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Comment {
 
     @Id
@@ -28,12 +29,9 @@ public class Comment {
     private String content;
     private LocalDateTime createdAt;
 
-    public Comment(){
-
-    }
-
-    public Comment(Long commentId, String content, LocalDateTime createdAt) {
-        this.commentId = commentId;
+    public Comment(Post post, User user, String content, LocalDateTime createdAt) {
+        this.post = post;
+        this.user = user;
         this.content = content;
         this.createdAt = createdAt;
     }

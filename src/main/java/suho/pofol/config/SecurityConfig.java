@@ -83,24 +83,31 @@ public class SecurityConfig {
                         .userInfoEndpoint((userInfoEndpointConfig) ->
                                 userInfoEndpointConfig.userService(customOAuth2UserService)));  //Customizer.withDefaults() > oauth2 람다식 적용
 
+
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRequestHandler(requestHandler)
                         //CsrfTokenRequestAttributeHandler 인터페이스를 구현하면 추가 작업을 수행하거나 어플리케이션에서 토큰을 사용할 수 있는 방법을 커스텀할 수 있습니다.
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         //앵귤러나 리엑트와 함께 사용하면 withHttpOnlyFalse() 옵션을 사용해야 합니다. 쿠키의 http only 설정에 대해 검색해보시길 바랍니다.
-                        .ignoringRequestMatchers( "/login/**", "/logout/**", "/register/validate/email","/board/post")  /* , "/api/post"    "/"   */
+                        .ignoringRequestMatchers( "/login/**", "/logout/**", "/register/validate/email"
+                                , "/addLike", "/addComment", "/board/post" , "/deleteComment"
+                                , "/member/follow", "/member/searchUsers", "/member/add", "/member/accept", "/"
+                                , "/setup/changeInfo", "/setup/changeInfoProc"
+                                , "/chat/messages/**"
+                        )  /*  운영 환경에서는 ignoringRequestMatchers 함수 삭제 및 주석처리 ★★★★★  */
                 )
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers( "/member/join", "/member/joinProc", "/login", "/oauth2/**", "/loginProc", "/logout/**").permitAll() /*  ,"/" */
                         .requestMatchers( "/resources/**", "/static/**", "/assets/**", "/error", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers( "/bootstrap-icons.svg").permitAll()
+                        .requestMatchers( "/addLike", "/addComment", "/board/post").authenticated()
 //                        .requestMatchers( "/board").permitAll()
-                        /*.requestMatchers("/admin").hasRole("ADMIN")   //admin 페이지 인경우 로그인 필요.
-                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")*/
-                        /*.requestMatchers("/").hasAnyRole("A")
-                        .requestMatchers("/manager").hasAnyRole("B")
-                        .requestMatchers("/admin").hasAnyRole("C") */
+//                        .requestMatchers("/admin").hasRole("ADMIN")   //admin 페이지 인경우 로그인 필요.
+//                        .requestMatchers("/**").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers("/").hasAnyRole("A")
+//                        .requestMatchers("/manager").hasAnyRole("B")
+//                        .requestMatchers("/admin").hasAnyRole("C")
                         .anyRequest().authenticated() //나머지 요청들은 권한이 있어야만 접근 가능
                 );
                 /*.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);*/

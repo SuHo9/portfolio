@@ -9,6 +9,7 @@ import suho.pofol.domain.board.Likes;
 import suho.pofol.domain.board.Post;
 import suho.pofol.domain.chat.ConversationParticipant;
 import suho.pofol.domain.chat.Message;
+import suho.pofol.domain.notice.Notice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +41,20 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Likes> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "following")
-    private List<Follow> followings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "follower")
+    @OneToMany(mappedBy = "followerId") //ksh
     private List<Follow> followers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followingId") //ksh
+    private List<Follow> followings = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Message> messages = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<ConversationParticipant> conversationParticipants = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "user")
+//    private List<Notice> notices = new ArrayList<>();
 
 
     public User(){

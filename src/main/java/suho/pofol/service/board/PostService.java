@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,6 +33,15 @@ public class PostService {
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
+
+    public List<Post> getPostsByUser(User user) {
+        return postRepository.findByUser(user);
+    }
+
+//    public List<Long> getPostIdsByUser(User user) {
+//        List<Post> posts = postRepository.findByUser(user);
+//        return posts.stream().map(Post::getPostId).collect(Collectors.toList());
+//    }
 
 
     public void createPost(PostDTO postDTO, String username) throws IOException {
